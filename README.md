@@ -21,6 +21,13 @@ From npm (recommended):
 npm install -g glb-pack
 ```
 
+For browser/library use (no global install needed):
+
+```bash
+npm install glb-pack
+# then: import { runPack } from "glb-pack/web"
+```
+
 Or from source:
 
 ```bash
@@ -54,6 +61,49 @@ Example output:
 ✓ Wrote outputs/JerseyBarrierB.glb
 ✓ Wrote outputs/JerseyBarrierB.png
 ✓ Wrote outputs/JerseyBarrierB.zip
+```
+
+## Browser Usage
+
+`glb-pack` also runs entirely in the browser — no server, no Node.js. The same
+crop+remap algorithm runs via Canvas2D (image work) and `fflate` (zip).
+
+```ts
+import { runPack, ValidationError } from "glb-pack/web";
+
+// drag-dropped or <input type="file"> File
+const file: File = /* ... */;
+const glbBytes = new Uint8Array(await file.arrayBuffer());
+
+try {
+  const result = await runPack(glbBytes, {
+    filename: "model",  // optional; used as the stem inside the zip
+    zip: true,          // optional; default true
+  });
+  // result.glbBytes      — Uint8Array, the new GLB
+  // result.baseColorPng  — Uint8Array, the cropped baseColor PNG
+  // result.zipBytes      — Uint8Array | null
+  // result.bbox          — { uMin, vMin, uMax, vMax }
+  // result.baseColorSize — { width, height }
+} catch (err) {
+  if (err instanceof ValidationError) {
+    // user-facing message (e.g., "Multiple materials...")
+  } else {
+    throw err;
+  }
+}
+```
+
+Browser support: Chrome 91+, Firefox 90+, Safari 15+, Edge 91+.
+
+The library never triggers a download — your app does that:
+
+```ts
+const blob = new Blob([result.zipBytes!], { type: "application/zip" });
+const url = URL.createObjectURL(blob);
+const a = Object.assign(document.createElement("a"), { href: url, download: "packed.zip" });
+a.click();
+URL.revokeObjectURL(url);
 ```
 
 ## V1 supported / not supported
