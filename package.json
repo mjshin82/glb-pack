@@ -3,6 +3,32 @@
   "version": "0.1.0",
   "description": "Crop unused texture space and remap UVs in a GLB",
   "type": "module",
+  "license": "MIT",
+  "author": "concode <dev@concode.co>",
+  "homepage": "https://github.com/mjshin82/glb-pack#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mjshin82/glb-pack.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mjshin82/glb-pack/issues"
+  },
+  "keywords": [
+    "glb",
+    "gltf",
+    "texture",
+    "uv",
+    "atlas",
+    "pack",
+    "crop",
+    "3d",
+    "cli"
+  ],
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "bin": {
     "glb-pack": "dist/cli.js"
   },
@@ -11,7 +37,8 @@
     "dev": "tsx src/cli.ts",
     "test": "vitest run",
     "test:watch": "vitest",
-    "prepare": "npm run build"
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run build"
   },
   "dependencies": {
     "@gltf-transform/core": "^4.1.0",
