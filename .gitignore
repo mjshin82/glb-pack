@@ -4,3 +4,4 @@ outputs/*
 !outputs/.gitkeep
 *.log
 .DS_Store
+tests/.tmp-out/
