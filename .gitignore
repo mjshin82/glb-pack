@@ -1,7 +1,8 @@
 node_modules/
 dist/
-outputs/*
-!outputs/.gitkeep
+.claude/
+models/
+outputs/
 *.log
 .DS_Store
 tests/.tmp-out/
