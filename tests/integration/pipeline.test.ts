@@ -4,7 +4,7 @@ import { existsSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { NodeIO } from "@gltf-transform/core";
 import sharp from "sharp";
-import { runPipeline } from "../../src/pipeline.js";
+import { runPipeline } from "../../src/node/index.js";
 
 const FIXTURE = resolve("tests/fixtures/JerseyBarrierB.glb");
 const TMP = resolve("tests/.tmp-out");
