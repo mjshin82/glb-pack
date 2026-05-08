@@ -5,5 +5,9 @@ export default defineConfig({
     include: ["tests/**/*.test.ts"],
     testTimeout: 20000,
     passWithNoTests: true,
+    environmentMatchGlobs: [
+      ["tests/unit/web/**", "happy-dom"],
+      ["tests/integration/web-pipeline.test.ts", "happy-dom"],
+    ],
   },
 });
