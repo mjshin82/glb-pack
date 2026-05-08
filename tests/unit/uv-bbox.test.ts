@@ -38,6 +38,6 @@ describe("computeUvBbox", () => {
   });
 
   it("throws on empty input (no UVs to bound)", () => {
-    expect(() => computeUvBbox([])).toThrow();
+    expect(() => computeUvBbox([])).toThrow("computeUvBbox: no UVs provided");
   });
 });
