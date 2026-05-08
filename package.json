@@ -1,7 +1,7 @@
 {
   "name": "glb-pack",
-  "version": "0.1.0",
-  "description": "Crop unused texture space and remap UVs in a GLB",
+  "version": "0.2.0",
+  "description": "Crop unused texture space and remap UVs in a GLB (Node + Browser)",
   "type": "module",
   "license": "MIT",
   "author": "concode <dev@concode.co>",
@@ -22,8 +22,14 @@
     "pack",
     "crop",
     "3d",
-    "cli"
+    "cli",
+    "browser"
   ],
+  "sideEffects": false,
+  "exports": {
+    ".":     { "types": "./dist/node/index.d.ts", "default": "./dist/node/index.js" },
+    "./web": { "types": "./dist/web/index.d.ts",  "default": "./dist/web/index.js" }
+  },
   "files": [
     "dist",
     "README.md",
