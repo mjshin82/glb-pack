@@ -15,8 +15,16 @@ The tool computes the smallest axis-aligned UV bounding box across every primiti
 
 ## Install
 
+From npm (recommended):
+
 ```bash
-git clone git@github.com:mjshin82/glb-pack.git
+npm install -g glb-pack
+```
+
+Or from source:
+
+```bash
+git clone https://github.com/mjshin82/glb-pack.git
 cd glb-pack
 npm install
 npm install -g .
