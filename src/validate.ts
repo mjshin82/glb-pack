@@ -39,7 +39,11 @@ export function validate(doc: Document): void {
       );
     }
     const arr = uv.getArray();
-    if (!arr) continue;
+    if (!arr) {
+      throw new ValidationError(
+        `Primitive of mesh "${mesh.getName()}" has TEXCOORD_0 but no backing data.`,
+      );
+    }
     let min = Infinity, max = -Infinity;
     for (let i = 0; i < arr.length; i++) {
       const v = arr[i];

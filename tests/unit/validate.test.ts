@@ -86,4 +86,10 @@ describe("validate", () => {
   it("accepts UVs at exactly 0 and 1 (inclusive)", () => {
     expect(() => validate(buildDoc({ uvs: [0, 0, 1, 1] }))).not.toThrow();
   });
+
+  it("rejects a document with no primitives", () => {
+    const doc = new Document();
+    doc.createBuffer();
+    expect(() => validate(doc)).toThrow(/No primitives/);
+  });
 });
