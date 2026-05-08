@@ -215,7 +215,7 @@ Each stage is an independent commit. Tests must pass after each stage.
 
 | Stage | What | Test gate |
 |---|---|---|
-| 1 | Move pure modules into `src/core/` (errors, uv-bbox, remap-uv, validate). Update import paths. | All existing tests pass unchanged. |
+| 1 | Move pure modules into `src/core/` (errors, uv-bbox, remap-uv, validate). Update import paths inside `src/` and inside `tests/unit/*.test.ts`. | Test expectations unchanged; only import paths updated. All tests pass. |
 | 2 | Add `src/ports.ts` (interface only, no implementations). | tsc clean. |
 | 3 | Extract `src/core/pipeline-core.ts` from existing `pipeline.ts`. Add unit test with mock adapters. | New core test passes; existing tests still pass. |
 | 4 | Move existing texture-crop, IO, zip code into `src/node/` adapters. Re-route `cli.ts`. Add `src/node/index.ts`. | Existing integration test passes unchanged. |
