@@ -1,0 +1,31 @@
+{
+  "name": "glb-pack",
+  "version": "0.1.0",
+  "description": "Crop unused texture space and remap UVs in a GLB",
+  "type": "module",
+  "bin": {
+    "glb-pack": "dist/cli.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "@gltf-transform/core": "^4.1.0",
+    "archiver": "^7.0.1",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@types/archiver": "^6.0.2",
+    "@types/node": "^20.14.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "vitest": "^2.1.0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
