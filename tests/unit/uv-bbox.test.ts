@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { computeUvBbox } from "../../src/uv-bbox.js";
+import { computeUvBbox } from "../../src/core/uv-bbox.js";
 
 describe("computeUvBbox", () => {
   it("returns the rectangle that contains every UV point", () => {

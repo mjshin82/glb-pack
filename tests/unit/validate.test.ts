@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { Document } from "@gltf-transform/core";
-import { validate } from "../../src/validate.js";
-import { ValidationError } from "../../src/errors.js";
+import { validate } from "../../src/core/validate.js";
+import { ValidationError } from "../../src/core/errors.js";
 
 interface BuildOpts {
   uvs?: number[];

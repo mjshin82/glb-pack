@@ -3,7 +3,7 @@ import { mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { resolve } from "node:path";
 import { runPipeline } from "./pipeline.js";
-import { ValidationError } from "./errors.js";
+import { ValidationError } from "./core/errors.js";
 
 const USAGE = `glb-pack — crop unused texture space and remap UVs in a GLB.
 

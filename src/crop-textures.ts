@@ -1,6 +1,6 @@
 import type { Document } from "@gltf-transform/core";
 import sharp from "sharp";
-import type { UvBbox } from "./uv-bbox.js";
+import type { UvBbox } from "./core/uv-bbox.js";
 
 export interface CropResult {
   /** PNG bytes of the cropped baseColor texture. */

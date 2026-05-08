@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { remapUv } from "../../src/remap-uv.js";
+import { remapUv } from "../../src/core/remap-uv.js";
 
 describe("remapUv", () => {
   it("maps bbox corners to (0,0) and (1,1)", () => {

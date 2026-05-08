@@ -1,10 +1,10 @@
 import { join, basename, extname } from "node:path";
 import { Accessor } from "@gltf-transform/core";
 import { load } from "./load.js";
-import { validate } from "./validate.js";
-import { computeUvBbox } from "./uv-bbox.js";
-import type { UvBbox } from "./uv-bbox.js";
-import { remapUv } from "./remap-uv.js";
+import { validate } from "./core/validate.js";
+import { computeUvBbox } from "./core/uv-bbox.js";
+import type { UvBbox } from "./core/uv-bbox.js";
+import { remapUv } from "./core/remap-uv.js";
 import { cropTextures } from "./crop-textures.js";
 import { writeGlb } from "./write-glb.js";
 import { writePng } from "./write-png.js";
