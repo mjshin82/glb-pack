@@ -4,7 +4,7 @@ import { validate } from "./validate.js";
 import { computeUvBbox } from "./uv-bbox.js";
 import type { UvBbox } from "./uv-bbox.js";
 import { remapUv } from "./remap-uv.js";
-import { bboxToPixelRect } from "./bbox-to-rect.js";
+import { bboxToPixelRect, pixelRectToUvBbox } from "./bbox-to-rect.js";
 import type { ImageOps } from "../ports.js";
 
 export interface CoreInputs {
@@ -53,6 +53,7 @@ export async function runCore({ doc, image }: CoreInputs): Promise<CoreResult> {
 
   let baseColorPng: Uint8Array | null = null;
   let baseColorSize = { width: 0, height: 0 };
+  let remapBbox: UvBbox | null = null;
 
   for (const tex of root.listTextures()) {
     const buf = tex.getImage();
@@ -64,10 +65,14 @@ export async function runCore({ doc, image }: CoreInputs): Promise<CoreResult> {
     if (tex === baseColorTex) {
       baseColorPng = cropped;
       baseColorSize = { width: rect.width, height: rect.height };
+      remapBbox = pixelRectToUvBbox(rect, size);
     }
   }
   if (!baseColorPng) {
     throw new Error("runCore: baseColor texture had no image data after crop.");
+  }
+  if (!remapBbox) {
+    throw new Error("runCore: baseColor texture had no crop rect.");
   }
 
   // Remap each unique UV accessor in place.
@@ -75,7 +80,7 @@ export async function runCore({ doc, image }: CoreInputs): Promise<CoreResult> {
     const arr = acc.getArray();
     if (!(arr instanceof Float32Array)) continue;
     acc.setArray(
-      remapUv(arr as Float32Array<ArrayBuffer>, bbox) as Float32Array<ArrayBuffer>,
+      remapUv(arr as Float32Array<ArrayBuffer>, remapBbox) as Float32Array<ArrayBuffer>,
     );
   }
 

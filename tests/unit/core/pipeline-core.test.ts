@@ -74,6 +74,29 @@ describe("runCore", () => {
     expect(Array.from(acc.getArray()!)).toEqual([0, 0, 1, 0, 1, 1, 0, 1]);
   });
 
+  it("remaps UVs against the effective pixel crop rect after outward rounding", async () => {
+    const doc = buildSingleMaterialDoc([0.105, 0.105, 0.895, 0.895]);
+    const image = makeMockImageOps({ width: 100, height: 100 });
+
+    const result = await runCore({ doc, image });
+
+    expect(result.bbox.uMin).toBeCloseTo(0.105);
+    expect(result.bbox.vMin).toBeCloseTo(0.105);
+    expect(result.bbox.uMax).toBeCloseTo(0.895);
+    expect(result.bbox.vMax).toBeCloseTo(0.895);
+    expect(image.cropCalls[0].rect).toEqual({
+      left: 10, top: 10, width: 80, height: 80,
+    });
+
+    const acc = doc.getRoot().listMeshes()[0].listPrimitives()[0]
+      .getAttribute("TEXCOORD_0")!;
+    const out = acc.getArray()!;
+    expect(out[0]).toBeCloseTo(0.00625);
+    expect(out[1]).toBeCloseTo(0.00625);
+    expect(out[2]).toBeCloseTo(0.99375);
+    expect(out[3]).toBeCloseTo(0.99375);
+  });
+
   it("re-throws ValidationError from validate() before doing image work", async () => {
     // Build a multi-material doc to trigger validate failure
     const doc = buildSingleMaterialDoc();

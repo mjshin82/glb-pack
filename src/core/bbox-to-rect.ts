@@ -22,3 +22,15 @@ export function bboxToPixelRect(
     height: Math.max(1, bottom - top),
   };
 }
+
+export function pixelRectToUvBbox(
+  rect: PixelRect,
+  size: { width: number; height: number },
+): UvBbox {
+  return {
+    uMin: rect.left / size.width,
+    vMin: rect.top / size.height,
+    uMax: (rect.left + rect.width) / size.width,
+    vMax: (rect.top + rect.height) / size.height,
+  };
+}

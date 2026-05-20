@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { bboxToPixelRect } from "../../../src/core/bbox-to-rect.js";
+import { bboxToPixelRect, pixelRectToUvBbox } from "../../../src/core/bbox-to-rect.js";
 
 describe("bboxToPixelRect", () => {
   it("maps a unit bbox to the full image rect", () => {
@@ -46,5 +46,19 @@ describe("bboxToPixelRect", () => {
       { width: 100, height: 100 },
     );
     expect(r).toEqual({ left: 50, top: 50, width: 1, height: 1 });
+  });
+
+  it("converts a rounded crop rect back to the effective UV bbox", () => {
+    const rect = bboxToPixelRect(
+      { uMin: 0.105, vMin: 0.205, uMax: 0.895, vMax: 0.795 },
+      { width: 100, height: 200 },
+    );
+
+    expect(pixelRectToUvBbox(rect, { width: 100, height: 200 })).toEqual({
+      uMin: 0.1,
+      vMin: 0.205,
+      uMax: 0.9,
+      vMax: 0.795,
+    });
   });
 });
