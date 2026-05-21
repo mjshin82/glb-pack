@@ -1,8 +1,11 @@
 #!/usr/bin/env node
 import { mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { createRequire } from "node:module";
 import { resolve } from "node:path";
 import { runPipeline, ValidationError } from "./node/index.js";
+
+const pkg = createRequire(import.meta.url)("../package.json") as { version: string };
 
 const USAGE = `glb-pack — crop unused texture space and remap UVs in a GLB.
 
@@ -28,7 +31,7 @@ async function main(argv: string[]): Promise<number> {
     return 0;
   }
   if (args.includes("--version") || args.includes("-V")) {
-    process.stdout.write("0.1.0\n");
+    process.stdout.write(`${pkg.version}\n`);
     return 0;
   }
 

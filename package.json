@@ -1,6 +1,6 @@
 {
   "name": "glb-pack",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Crop unused texture space and remap UVs in a GLB (Node + Browser)",
   "type": "module",
   "license": "MIT",
