@@ -17,4 +17,16 @@ export const nodeImageOps: ImageOps = {
       .toBuffer();
     return new Uint8Array(cropped);
   },
+
+  async decodeRgba(buf) {
+    const { data, info } = await sharp(Buffer.from(buf))
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    return {
+      width: info.width,
+      height: info.height,
+      pixels: new Uint8Array(data.buffer, data.byteOffset, data.byteLength),
+    };
+  },
 };
