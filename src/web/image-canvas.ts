@@ -93,7 +93,38 @@ async function cropToPngImpl(buf: Uint8Array, rect: Rect): Promise<Uint8Array> {
   return canvas.toBuffer("image/png");
 }
 
+async function decodeRgbaImpl(buf: Uint8Array): Promise<{ width: number; height: number; pixels: Uint8Array }> {
+  if (hasNativeCanvas()) {
+    const img = await loadImageNative(buf);
+    const canvas = document.createElement("canvas");
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) throw new Error("webImageOps.decodeRgba: 2d context unavailable");
+    ctx.drawImage(img as unknown as CanvasImageSource, 0, 0);
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    return {
+      width: canvas.width,
+      height: canvas.height,
+      pixels: new Uint8Array(data.data.buffer, data.data.byteOffset, data.data.byteLength),
+    };
+  }
+  const pkg = await tryLoadCanvasPkg();
+  if (!pkg) throw new Error("webImageOps.decodeRgba: no canvas implementation available");
+  const img = await pkg.loadImage(Buffer.from(buf));
+  const canvas = pkg.createCanvas(img.width, img.height);
+  const ctx = canvas.getContext("2d");
+  ctx.drawImage(img, 0, 0);
+  const data = ctx.getImageData(0, 0, img.width, img.height);
+  return {
+    width: img.width,
+    height: img.height,
+    pixels: new Uint8Array(data.data.buffer, data.data.byteOffset, data.data.byteLength),
+  };
+}
+
 export const webImageOps: ImageOps = {
   probe: probeImpl,
   cropToPng: cropToPngImpl,
+  decodeRgba: decodeRgbaImpl,
 };
