@@ -27,8 +27,14 @@
   ],
   "sideEffects": false,
   "exports": {
-    ".":     { "types": "./dist/node/index.d.ts", "default": "./dist/node/index.js" },
-    "./web": { "types": "./dist/web/index.d.ts",  "default": "./dist/web/index.js" }
+    ".": {
+      "types": "./dist/node/index.d.ts",
+      "default": "./dist/node/index.js"
+    },
+    "./web": {
+      "types": "./dist/web/index.d.ts",
+      "default": "./dist/web/index.js"
+    }
   },
   "files": [
     "dist",
@@ -55,6 +61,7 @@
   "devDependencies": {
     "@types/archiver": "^6.0.2",
     "@types/node": "^20.14.0",
+    "ase-parser": "^0.0.18",
     "canvas": "^3.2.3",
     "happy-dom": "^15.11.7",
     "tsx": "^4.19.0",
