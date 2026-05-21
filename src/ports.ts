@@ -12,6 +12,10 @@ export interface ImageOps {
     buf: Uint8Array,
     rect: { left: number; top: number; width: number; height: number },
   ) => Promise<Uint8Array>;
+  /** Decode encoded image bytes (PNG/JPEG) to raw RGBA, top-down (length = width*height*4). */
+  readonly decodeRgba: (
+    buf: Uint8Array,
+  ) => Promise<{ width: number; height: number; pixels: Uint8Array }>;
 }
 
 /**

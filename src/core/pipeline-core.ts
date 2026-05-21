@@ -6,6 +6,7 @@ import type { UvBbox } from "./uv-bbox.js";
 import { remapUv } from "./remap-uv.js";
 import { bboxToPixelRect, pixelRectToUvBbox } from "./bbox-to-rect.js";
 import type { ImageOps } from "../ports.js";
+import { writeAseprite } from "./aseprite-writer.js";
 
 export interface CoreInputs {
   /** Pre-loaded glTF Document. The adapter handles read; runCore mutates this in place. */
@@ -15,8 +16,10 @@ export interface CoreInputs {
 }
 
 export interface CoreResult {
-  /** The cropped baseColor texture as PNG bytes (separately surfaced for adapters that emit a standalone PNG). */
+  /** The cropped baseColor texture as PNG bytes. */
   baseColorPng: Uint8Array;
+  /** The cropped baseColor texture as a minimal single-layer .aseprite. */
+  asepriteBytes: Uint8Array;
   /** UV bounding box that was computed and used for cropping/remapping. */
   bbox: UvBbox;
   /** Pixel size of the cropped baseColor texture. */
@@ -84,5 +87,10 @@ export async function runCore({ doc, image }: CoreInputs): Promise<CoreResult> {
     );
   }
 
-  return { baseColorPng, bbox, baseColorSize };
+  const rgba = await image.decodeRgba(baseColorPng);
+  const asepriteBytes = writeAseprite(rgba.width, rgba.height, [
+    { name: "baseColor", pixels: rgba.pixels },
+  ]);
+
+  return { baseColorPng, asepriteBytes, bbox, baseColorSize };
 }

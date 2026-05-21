@@ -7,8 +7,8 @@ import { runPipeline, ValidationError } from "./node/index.js";
 const USAGE = `glb-pack — crop unused texture space and remap UVs in a GLB.
 
 Usage:
-  glb-pack <name>             Read models/<name>.glb, write outputs/<name>.{glb,png,zip}
-  glb-pack <path/to.glb>      Read the given file, write outputs/<stem>.{glb,png,zip}
+  glb-pack <name>             Read models/<name>.glb, write outputs/<name>.{glb,png,aseprite,zip}
+  glb-pack <path/to.glb>      Read the given file, write outputs/<stem>.{glb,png,aseprite,zip}
 
 Options:
   --no-zip                    Skip the .zip output
@@ -60,6 +60,7 @@ async function main(argv: string[]): Promise<number> {
     );
     process.stdout.write(`✓ Wrote ${result.outputs.glb}\n`);
     process.stdout.write(`✓ Wrote ${result.outputs.png}\n`);
+    process.stdout.write(`✓ Wrote ${result.outputs.aseprite}\n`);
     if (result.outputs.zip) process.stdout.write(`✓ Wrote ${result.outputs.zip}\n`);
     return 0;
   } catch (err) {

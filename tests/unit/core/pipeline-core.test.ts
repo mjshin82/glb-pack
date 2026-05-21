@@ -38,6 +38,15 @@ function makeMockImageOps(textureSize = { width: 100, height: 100 }): MockImageO
       cropCalls.push({ rect });
       return new Uint8Array([0xFF, 0xFE, 0xFD]);  // sentinel "cropped" bytes
     },
+    decodeRgba: async (_buf) => {
+      // Return plausible RGBA data sized to match the cropped rect.
+      // The sentinel crop bytes have no real dimensions, so we use the
+      // last recorded crop rect (or textureSize as fallback).
+      const last = cropCalls[cropCalls.length - 1];
+      const width = last ? last.rect.width : textureSize.width;
+      const height = last ? last.rect.height : textureSize.height;
+      return { width, height, pixels: new Uint8Array(width * height * 4) };
+    },
     get probeCalls() { return probeCalls; },
     cropCalls,
   };
