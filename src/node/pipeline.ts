@@ -15,13 +15,14 @@ export interface PipelineOptions {
 export interface PipelineResult {
   bbox: UvBbox;
   baseColorSize: { width: number; height: number };
-  outputs: { glb: string; png: string; zip: string | null };
+  outputs: { glb: string; png: string; aseprite: string; zip: string | null };
 }
 
 export async function runPipeline(opts: PipelineOptions): Promise<PipelineResult> {
   const stem = basename(opts.inputPath, extname(opts.inputPath));
   const outGlbPath = join(opts.outputDir, `${stem}.glb`);
   const outPngPath = join(opts.outputDir, `${stem}.png`);
+  const outAsePath = join(opts.outputDir, `${stem}.aseprite`);
   const outZipPath = join(opts.outputDir, `${stem}.zip`);
 
   const doc = await readGlbFromPath(opts.inputPath);
@@ -30,12 +31,14 @@ export async function runPipeline(opts: PipelineOptions): Promise<PipelineResult
 
   await writeFile(outGlbPath, outGlbBytes);
   await writeFile(outPngPath, result.baseColorPng);
+  await writeFile(outAsePath, result.asepriteBytes);
 
   let zipPath: string | null = null;
   if (opts.zip) {
     const zipBytes = await nodeZipOps.pack([
       { name: `${stem}.glb`, bytes: outGlbBytes },
       { name: `${stem}.png`, bytes: result.baseColorPng },
+      { name: `${stem}.aseprite`, bytes: result.asepriteBytes },
     ]);
     await writeFile(outZipPath, zipBytes);
     zipPath = outZipPath;
@@ -44,6 +47,6 @@ export async function runPipeline(opts: PipelineOptions): Promise<PipelineResult
   return {
     bbox: result.bbox,
     baseColorSize: result.baseColorSize,
-    outputs: { glb: outGlbPath, png: outPngPath, zip: zipPath },
+    outputs: { glb: outGlbPath, png: outPngPath, aseprite: outAsePath, zip: zipPath },
   };
 }

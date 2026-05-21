@@ -60,6 +60,7 @@ async function main(argv: string[]): Promise<number> {
     );
     process.stdout.write(`✓ Wrote ${result.outputs.glb}\n`);
     process.stdout.write(`✓ Wrote ${result.outputs.png}\n`);
+    process.stdout.write(`✓ Wrote ${result.outputs.aseprite}\n`);
     if (result.outputs.zip) process.stdout.write(`✓ Wrote ${result.outputs.zip}\n`);
     return 0;
   } catch (err) {
