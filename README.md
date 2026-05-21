@@ -8,7 +8,8 @@ Crop unused texture space out of a GLB and remap its UVs to the new 0–1 range.
 input  : models/<name>.glb        (texture has lots of empty space)
 output : outputs/<name>.glb       (UVs remapped, all textures cropped + embedded)
          outputs/<name>.png       (cropped baseColor texture, separate file)
-         outputs/<name>.zip       (the .glb + .png, flat zipped)
+         outputs/<name>.aseprite  (cropped baseColor as a minimal single-layer .aseprite)
+         outputs/<name>.zip       (the .glb + .png + .aseprite, flat zipped)
 ```
 
 The tool computes the smallest axis-aligned UV bounding box across every primitive, crops every texture (baseColor, normal, ORM, emissive…) to that pixel rectangle, and rewrites the UVs into the new `[0, 1]` space.
@@ -60,6 +61,7 @@ Example output:
 ✓ baseColor cropped to 84×60
 ✓ Wrote outputs/JerseyBarrierB.glb
 ✓ Wrote outputs/JerseyBarrierB.png
+✓ Wrote outputs/JerseyBarrierB.aseprite
 ✓ Wrote outputs/JerseyBarrierB.zip
 ```
 
@@ -80,11 +82,12 @@ try {
     filename: "model",  // optional; used as the stem inside the zip
     zip: true,          // optional; default true
   });
-  // result.glbBytes      — Uint8Array, the new GLB
-  // result.baseColorPng  — Uint8Array, the cropped baseColor PNG
-  // result.zipBytes      — Uint8Array | null
-  // result.bbox          — { uMin, vMin, uMax, vMax }
-  // result.baseColorSize — { width, height }
+  // result.glbBytes       — Uint8Array, the new GLB
+  // result.baseColorPng   — Uint8Array, the cropped baseColor PNG
+  // result.asepriteBytes  — Uint8Array, the cropped baseColor as .aseprite
+  // result.zipBytes       — Uint8Array | null
+  // result.bbox           — { uMin, vMin, uMax, vMax }
+  // result.baseColorSize  — { width, height }
 } catch (err) {
   if (err instanceof ValidationError) {
     // user-facing message (e.g., "Multiple materials...")
@@ -131,7 +134,7 @@ This is a V1 release with a deliberately narrow scope.
 3. Compute the UV bounding box over every primitive's `TEXCOORD_0`.
 4. Crop every texture in the document by `bbox × textureSize` (per texture, since resolutions can differ). Outward rounding (`floor` for min, `ceil` for max) preserves full UV coverage.
 5. Remap each unique UV accessor with `(u − uMin) / (uMax − uMin)`.
-6. Write the new GLB (textures embedded), a separate baseColor PNG, and a flat zip.
+6. Write the new GLB (textures embedded), a separate baseColor PNG, a minimal RGBA single-layer .aseprite of the same baseColor, and a flat zip.
 
 No padding is added at the bbox boundary — keep this in mind if your engine relies on aggressive mip filtering.
 
@@ -155,17 +158,18 @@ Project structure:
 
 ```
 src/
-├─ cli.ts             # argv → pipeline → exit code
-├─ pipeline.ts        # orchestration
-├─ load.ts            # NodeIO.read wrapper
-├─ validate.ts        # single-material / UV ∈ [0,1] / no TEXCOORD_1
-├─ uv-bbox.ts         # pure: UV arrays → bbox
-├─ remap-uv.ts        # pure: UV array + bbox → new UV array
-├─ crop-textures.ts   # mutates Document textures via sharp; returns baseColor PNG
-├─ write-glb.ts       # NodeIO.write wrapper
-├─ write-png.ts       # fs/promises.writeFile wrapper
-├─ pack-zip.ts        # archiver wrapper
-└─ errors.ts          # ValidationError class
+├─ cli.ts                # argv → pipeline → exit code
+├─ ports.ts              # ImageOps (probe / cropToPng / decodeRgba), ZipOps
+├─ core/
+│  ├─ aseprite-writer.ts # pure: (w, h, layers) → minimal .aseprite bytes
+│  ├─ bbox-to-rect.ts
+│  ├─ errors.ts
+│  ├─ pipeline-core.ts
+│  ├─ remap-uv.ts
+│  ├─ uv-bbox.ts
+│  └─ validate.ts
+├─ node/                 # sharp-based image ops, archiver-based zip, NodeIO glTF
+└─ web/                  # Canvas2D image ops, fflate-based zip, WebIO glTF
 
 tests/
 ├─ unit/              # uv-bbox, remap-uv, validate
