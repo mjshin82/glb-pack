@@ -2,6 +2,9 @@ import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { NodeIO } from "@gltf-transform/core";
+import Aseprite from "ase-parser";
+import { Buffer } from "node:buffer";
+import { unzipSync } from "fflate";
 import { runPack, ValidationError } from "../../src/web/index.js";
 
 const FIXTURE = resolve("tests/fixtures/JerseyBarrierB.glb");
@@ -38,6 +41,19 @@ describe("runPack (web integration)", () => {
     }
     expect(outMin).toBeGreaterThanOrEqual(-1e-5);
     expect(outMax).toBeLessThanOrEqual(1 + 1e-5);
+
+    // 4. asepriteBytes is present, parses, and reports the same dimensions.
+    expect(result.asepriteBytes.byteLength).toBeGreaterThan(0);
+    const ase = new Aseprite(Buffer.from(result.asepriteBytes), "test.aseprite");
+    ase.parse();
+    expect(ase.width).toBe(result.baseColorSize.width);
+    expect(ase.height).toBe(result.baseColorSize.height);
+    expect(ase.layers[0].name).toBe("baseColor");
+
+    // 5. The zip contains the .aseprite entry.
+    const entries = unzipSync(result.zipBytes!);
+    expect(Object.keys(entries)).toContain("test.aseprite");
+    expect(entries["test.aseprite"].length).toBeGreaterThan(0);
   });
 
   it("re-throws ValidationError for an OOB-UV input", async () => {
