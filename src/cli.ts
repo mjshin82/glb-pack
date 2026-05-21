@@ -7,8 +7,8 @@ import { runPipeline, ValidationError } from "./node/index.js";
 const USAGE = `glb-pack — crop unused texture space and remap UVs in a GLB.
 
 Usage:
-  glb-pack <name>             Read models/<name>.glb, write outputs/<name>.{glb,png,zip}
-  glb-pack <path/to.glb>      Read the given file, write outputs/<stem>.{glb,png,zip}
+  glb-pack <name>             Read models/<name>.glb, write outputs/<name>.{glb,png,aseprite,zip}
+  glb-pack <path/to.glb>      Read the given file, write outputs/<stem>.{glb,png,aseprite,zip}
 
 Options:
   --no-zip                    Skip the .zip output

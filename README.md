@@ -43,7 +43,7 @@ Requires Node ≥ 20.
 ## Usage
 
 ```bash
-# Read models/JerseyBarrierB.glb, write outputs/JerseyBarrierB.{glb,png,zip}
+# Read models/JerseyBarrierB.glb, write outputs/JerseyBarrierB.{glb,png,aseprite,zip}
 glb-pack JerseyBarrierB
 
 # Read any path directly
