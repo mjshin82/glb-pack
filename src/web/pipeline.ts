@@ -1,4 +1,3 @@
-// src/web/pipeline.ts
 import { runCore } from "../core/pipeline-core.js";
 import type { UvBbox } from "../core/uv-bbox.js";
 import { webImageOps } from "./image-canvas.js";
@@ -15,6 +14,7 @@ export interface PackOptions {
 export interface PackResult {
   glbBytes: Uint8Array;
   baseColorPng: Uint8Array;
+  asepriteBytes: Uint8Array;
   zipBytes: Uint8Array | null;
   bbox: UvBbox;
   baseColorSize: { width: number; height: number };
@@ -36,12 +36,14 @@ export async function runPack(
     zipBytes = await webZipOps.pack([
       { name: `${stem}.glb`, bytes: outGlbBytes },
       { name: `${stem}.png`, bytes: result.baseColorPng },
+      { name: `${stem}.aseprite`, bytes: result.asepriteBytes },
     ]);
   }
 
   return {
     glbBytes: outGlbBytes,
     baseColorPng: result.baseColorPng,
+    asepriteBytes: result.asepriteBytes,
     zipBytes,
     bbox: result.bbox,
     baseColorSize: result.baseColorSize,
